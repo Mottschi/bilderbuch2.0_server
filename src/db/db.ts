@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/witch-hunt-server";
-
 type DatabaseConnectorType = {
     connect: () => void,
     close: () => void,
@@ -9,6 +7,8 @@ type DatabaseConnectorType = {
 
 const db: DatabaseConnectorType = {
     connect: () => {
+        const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/FIXYOURDOTENV";
+
         mongoose.connect(MONGO_URI)
             .then((x) => {
                 const dbName = x.connection.name;
