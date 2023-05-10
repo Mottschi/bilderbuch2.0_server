@@ -1,26 +1,29 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv"
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
+import db from './db/db';
 
-import db from './db/db'
-import indexRouter from './routes/index.routes'
+import indexRouter from './routes/index.routes';
 
-dotenv.config()
+import errorHandlers from './error-handling/error-handling';
+
+dotenv.config();
 
 const app = express();
 
-const FRONTEND_URL = process.env.ORIGIN || "http://localhost:3000";
+const FRONTEND_URL = process.env.ORIGIN || 'http://localhost:3000';
 
-db.connect()
+db.connect();
 
-app.use(cors({
-    origin: [FRONTEND_URL]
-}));
+app.use(cors({ origin: [FRONTEND_URL] }));
 
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
-app.use(indexRouter)
+app.use(indexRouter);
+
+app.use(errorHandlers.notFound);
+app.use(errorHandlers.errorHandler);
 
 export default app;
