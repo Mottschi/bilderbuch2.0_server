@@ -2,7 +2,7 @@ import multer from 'multer';
 import multerS3 from 'multer-s3';
 import dotenv from 'dotenv';
 import mime from 'mime-types';
-import { S3Client } from '@aws-sdk/client-s3';
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 dotenv.config();
 
@@ -54,4 +54,14 @@ const recordingUploader = multer({
     }),
 }).single('recording');
 
-export default {recordingUploader, imageUploader};
+async function deleteObject(file: string) {
+    const key = file.substring(file.indexOf('.com/') + 5);
+    const command = new DeleteObjectCommand({Bucket: AWS_BUCKET, Key: key});
+    try {
+        const result = await s3Client.send(command);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export default {recordingUploader, imageUploader, deleteObject};
