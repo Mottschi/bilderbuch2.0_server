@@ -10,4 +10,10 @@ declare namespace Express {
     export interface Response {
         user?: UserType;
     }
+
+    namespace Multer {
+        interface File {
+            location?: string,
+        }
+    }
 }

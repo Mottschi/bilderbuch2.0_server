@@ -1,15 +1,30 @@
 import express from 'express';
-import {v2 as cloudinary} from 'cloudinary';
 
 import Book from '../models/Book.model';
+
+enum ERRORS {
+    MISSING_TITLE = 'Title required',
+    MISSING_FILE = 'File required',
+}
 
 // Create Function, will be used via POST
 async function createBook(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     const {title} = req.body;
     const userId = req.user.id;
+    const filename = req.file.location;
+
+    if (!title) {
+        res.status(400).json({message: ERRORS.MISSING_TITLE});
+        return;
+    }
+
+    if (!filename) {
+        res.status(400).json({message: ERRORS.MISSING_FILE});
+        return;
+    }
 
     try {
-        const thumbnail = cloudinary.url(req.file.filename);
+        const thumbnail = req.file.location;
         const book = await Book.create({title, owner: userId, thumbnail});
         res.status(201).json(book);
     } catch (error) {
@@ -25,7 +40,7 @@ async function updateBook (req: express.Request, res: express.Response, next: ex
 
     let thumbnail;
     if (req.file) {
-        thumbnail = cloudinary.url(req.file.filename);
+        thumbnail = req.file.location;
     }
 
     try {

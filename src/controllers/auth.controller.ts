@@ -57,7 +57,7 @@ async function login(req: express.Request, res: express.Response, next: express.
 
 async function register(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     const { email, password, username } = req.body;
-
+    console.log('trying to register');
     if (email === undefined) {
         res.status(401).json({ message: errors['missing email']});
         return;
@@ -71,16 +71,13 @@ async function register(req: express.Request, res: express.Response, next: expre
         return;
     }
 
-    try {
-        if (!isValidEmail(email)) {
-            res.status(400).json({ email: { message: errors['invalid email']}});
-            return;
-        }
     
+
+    try {
         const existingUser = await User.findOne({ email });
     
         if (existingUser) {
-            res.status(400).json({ email: { message: errors['existing email']}});
+            res.status(400).json({ message: errors['existing email']});
             return;
         }
     
