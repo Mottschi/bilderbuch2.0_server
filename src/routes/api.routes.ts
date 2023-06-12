@@ -8,7 +8,6 @@ import bookController from '../controllers/book.controller';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    console.log('called /');
     res.send('hello api');
 });
 

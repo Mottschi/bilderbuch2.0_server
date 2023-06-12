@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 
 import db from './db/db';
 
@@ -17,6 +18,7 @@ const FRONTEND_URL = process.env.ORIGIN || 'http://localhost:3000';
 db.connect();
 
 app.use(cors({ origin: [FRONTEND_URL] }));
+app.use(morgan('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
